@@ -1,0 +1,14 @@
+{
+  "name": "apify-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "extractProducts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Youri Chabert",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0"
+  }
+}
