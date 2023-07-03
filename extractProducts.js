@@ -1,36 +1,51 @@
 /*
-Strategy: we'll slice the interval of prices (from 0$ to 100,000$) into segments containing each less than 1000 products.
-We'll first retrieve the total number or products (for the whole price range).
-Then, as initial price segment length for our algorithm, we'll take the length that a segment of 1000 products would have
-if the repartition of the prices was homogene in the [0$, 100,000$] interval.
+Strategy:
+I have a recursive approach.
+I recursively split the price interval into segments and subsegments.
+This algorithm can be visualized as a tree, the nodes being the segments.
+If less than 1000 products are fetched within a segment, then this segment is a leaf (i.e. a terminal node).
+If a segment is a leaf, the products it contains are returned to the parent node.
+The parent node will then return to the grand-parent node all the products it got from its children.
+That way, all products are returned from child to parent, until the root of the tree, which returns all the products.
+With this approach, one request is done for each node.
+Since the goal is to do a minimal number of requests, we should minimize the number of nodes of the tree.
+To do that, we should partition our price intervals in the most appropriate way.
+But unfortunately, we do not know what is the distribution of products within the price range.
+If the distribution was uniform, then the best strategy would be to split each segments into subsegments of equal size.
+It's very unlikely that the distribution is uniform in practice. For instance, if the e-commerce website belongs to a supermarket,
+then it will contain a lot more products cheaper than 50,000$ than products more expensive than 50,000$.
+But if it is the website of a car or boat seller, it could be completely different.
+Since we lack information about the website, we'll assume that the distribution is uniform.
 
-products = []
+
+Here is the (pseudo)pseudocode of my approach:
 
 fetchProductsFromInterval(lowerIntervalBound, upperIntervalBound):
     intervalLength = upperIntervalBound - lowerIntervalBound
     totalProductsCount = fetch number of products in [lowerIntervalBound, upperIntervalBound]
+    minimalNumberOfRequests = totalProductsCount/1000
     segmentsBounds = [
         lowerIntervalBound,
-        lowerIntervalBound + intervalLength/(totalProductsCount/1000),
-        lowerIntervalBound + 2 * intervalLength/(totalProductsCount/1000),
+        lowerIntervalBound + intervalLength/minimalNumberOfRequests,
+        lowerIntervalBound + 2 * intervalLength/minimalNumberOfRequests,
         ...,
         upperIntervalBound
     ]
+    products = []
     for (int i=0; i<segmentBounds.length-1; i++):
         lowerBound=segmentsBounds[i];
         upperBound=segmentsBounds[i+1];
-        Fetch up to 1000 products in segment [lowerBound, upperBound]
+        fetchedProducts = fetch up to 1000 products in segment [lowerBound, upperBound]
         if fetched more than 1000 products:
-            fetchProductsFromInterval(lowerSegmentBound, upperSegmentBound)
+            products.concat(fetchProductsFromInterval(lowerSegmentBound, upperSegmentBound))
         else: // terminal case
-            Add the fetch products to the global products array
+            products.concat(fetchedProducts)
+    return products
 
-fetchProductsFromInterval(0, 100000);
+allProducts = fetchProductsFromInterval(0, 100000);
 */
 
-// TODO: assess complexities
-// TODO: add a mocker
-
-let products = [];
+// TODO: add tests
+// TODO: assess complexity/number of request from total number of products
 
 axios.get('https://api.ecommerce.com/products');
