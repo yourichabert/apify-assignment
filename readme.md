@@ -24,7 +24,7 @@ It's very unlikely that the distribution is uniform in practice. For instance, i
 Since we lack information about the website, we assume that the distribution is uniform, and therefore we split each time interval into segments of equal size.
 
 # TODO
-- add tests
+- address risk of overflooding the server by making too many requests at the same time
 - assess complexity/number of request from total number of products
 - design tree in readme
 - add TypeScript
