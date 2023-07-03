@@ -14,7 +14,9 @@ function splitInterval(lowerBound, upperBound, productsCount) {
   const segmentCount = Math.ceil(productsCount / 1000);
   const boundsCount = segmentCount + 1;
   const intervalLength = upperBound - lowerBound;
-  return [...Array(boundsCount).keys()].map((boundIndex) => lowerBound + Math.floor((boundIndex * intervalLength) / segmentCount));
+  return [...Array(boundsCount).keys()].map(
+    (boundIndex) => lowerBound + Math.floor((boundIndex * intervalLength) / segmentCount)
+  );
 }
 
 export async function fetchProductsFromInterval(lowerIntervalBound, upperIntervalBound, productsInfoGetter = getProductsInfo) {
