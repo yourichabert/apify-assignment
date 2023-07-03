@@ -10,10 +10,11 @@ export async function getProductsInfo(minPrice = 0, maxPrice = 100000) {
 }
 
 // Computes segments bounds given an input price interval and a count of products within that interval
-async function splitInterval(lowerBound, upperBound, productsCount) {
-  const segmentCount = Math.ceil(productsCount / 1000) + 1;
+function splitInterval(lowerBound, upperBound, productsCount) {
+  const segmentCount = Math.ceil(productsCount / 1000);
+  const boundsCount = segmentCount + 1;
   const intervalLength = upperBound - lowerBound;
-  return [...Array(segmentCount + 1).keys()].map((segmentIndex) => (segmentIndex * intervalLength) / segmentCount);
+  return [...Array(boundsCount).keys()].map((boundIndex) => lowerBound + Math.floor((boundIndex * intervalLength) / segmentCount));
 }
 
 export async function fetchProductsFromInterval(lowerIntervalBound, upperIntervalBound, productsInfoGetter = getProductsInfo) {

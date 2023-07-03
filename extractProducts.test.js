@@ -13,7 +13,7 @@ function getRandomFloat(min, max, decimals) {
 
 // Generate products prices
 function generateProductsPrices(productsCount = DEFAULT_PRODUCTS_COUNT) {
-  return Array(productsCount).fill(getRandomFloat(MIN_PRICE, MAX_PRICE, PRICE_DECIMALS));
+  return [...Array(productsCount)].map(() => getRandomFloat(MIN_PRICE, MAX_PRICE, PRICE_DECIMALS));
 }
 
 function countProductsInPriceRange(prices, minPrice, maxPrice) {
@@ -31,5 +31,5 @@ const getProductsInfoMocker = (minPrice, maxPrice) => {
 test("Extract as many products as expected", async () => {
   const productsCount = (await extractProducts.fetchProductsFromInterval(0, 100000, getProductsInfoMocker)).length;
   console.log("productsCount:", productsCount);
-  expect(productsCount).toEqual(9999);
+  expect(productsCount).toEqual(10000);
 });
